@@ -1,6 +1,8 @@
 using NewsItems.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -11,11 +13,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NewsItemsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NewsItemsContext") ?? throw new InvalidOperationException("Connection string 'NewsItemsContext' not found.")));
 
-// services
+// setup contoller services
 builder.Services.AddControllers();
 
+// setup swagger services
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // info
+    c.SwaggerDoc("v1", new OpenApiInfo()
+    {
+        Title = "Arno",
+        Version = "v1",
+        Description = "Description"
+    });
+
+    // use code comments
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 builder.Services.AddCors(options =>
 {

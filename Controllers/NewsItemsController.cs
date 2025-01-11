@@ -17,7 +17,10 @@ namespace NewsItems.Controllers
     {
         readonly INewsMessageRepository messageRepository = newsMessageRepository;
 
-        // GET: api/<NewsItemController>
+        /// <summary>
+        /// Returns all NewsItems
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<IEnumerable<NewsItem>> Get()
         {
@@ -39,8 +42,23 @@ namespace NewsItems.Controllers
             }
         }
 
-        // POST api/<NewsItemController>
+        /// <summary>
+        /// Creates a new NewsItem
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// {
+        /// "title": "test",
+        ///"message": "test",
+        ///"dateTime": "2025-01-11T14:06:07.288Z"
+        ///}
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <response code="201">If the item is created succesfully</response>
+        /// <response code="409">If the item already exists</response>
         [HttpPost]
+        [ProducesResponseType(typeof(NewsItem), 200)]
+        [ProducesResponseType(typeof(NewsItem), 409)]
         public ActionResult Post([FromBody] NewsItem value)
         {
             try
@@ -48,7 +66,7 @@ namespace NewsItems.Controllers
                 value.Id = RandomNumberGenerator.GetInt32(10000);
                 messageRepository.Add(value);
                 Response.Headers.Append("Location", $"/{value.Id.Value}");
-                return Created($"{Request.GetDisplayUrl()}/{value.Id.Value}",value);
+                return Created($"{Request.GetDisplayUrl()}/{value.Id.Value}", value);
             }
             catch (System.Exception e)
             {
