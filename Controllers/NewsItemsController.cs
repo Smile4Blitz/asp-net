@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NewsItems.Data;
@@ -11,6 +12,7 @@ namespace NewsItems.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("_myAllowSpecificOrigins")]
     public class NewsItemsController(INewsMessageRepository newsMessageRepository) : ControllerBase
     {
         readonly INewsMessageRepository messageRepository = newsMessageRepository;

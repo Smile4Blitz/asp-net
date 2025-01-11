@@ -6,12 +6,7 @@ namespace NewsItems.Data
 {
     public class NewsMessageRepository : INewsMessageRepository
     {
-        readonly Dictionary<int, NewsItem> items;
-
-        public NewsMessageRepository()
-        {
-            items = [];
-        }
+        private readonly Dictionary<int, NewsItem> items = [];
 
         public void Add(NewsItem item)
         {
